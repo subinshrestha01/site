@@ -78,7 +78,31 @@ const categoryBenefits: Record<Category, {
       items: [
         "शून्य बिजुली महसुल: तातो पानीको खर्चलाई ९०% सम्म कम गर्दछ।",
         "निरन्तर तातो पानी: डबल-वाल भ्याकुम ट्युबले हिउँदमा पनि पानी तातो राख्छ।",
-        "पर्यावरण मैत्री: कार्बन उत्सर्जनconst defaultProducts: Product[] = [
+        "पर्यावरण मैत्री: कार्बन उत्सर्जन घटाउने स्वच्छ ऊर्जा स्रोत।"
+      ]
+    }
+  },
+  electronics: {
+    en: {
+      title: "Upgrade Your Home Entertainment & Protection",
+      items: [
+        "Crystal-Clear 4K: Theater-like visuals in your living room at home.",
+        "Smart Connectivity: Built-in WiFi, apps, and seamless internet access.",
+        "Voltage Protection: V-Guard stabilizers shield your appliances from surges."
+      ]
+    },
+    np: {
+      title: "घरायसी मनोरञ्जन र सुरक्षा स्तरोन्नति गर्नुहोस्",
+      items: [
+        "क्रिस्टल-क्लियर ४K: घरमै हल जस्तै सिनेमाको अनुभव।",
+        "स्मार्ट जडान: बिल्ट-इन वाईफाई, एप्स र इन्टरनेट पहुँच।",
+        "भोल्टेज सुरक्षा: भि-गार्ड स्टेबिलाइजरले सामानलाई भोल्टेज उतारचढावबाट बचाउँछ।"
+      ]
+    }
+  }
+}
+
+const defaultProducts: Product[] = [
   {
     id: 5,
     cat: "heating",
@@ -208,10 +232,10 @@ const categoryBenefits: Record<Category, {
       specs: ["32\"–65\" screen sizes", "Built-in apps & WiFi", "1-year warranty support"],
       advantages: ["Stunning theater-like cinema visuals at home", "Built-in smart apps & WiFi connectivity", "Reduces family outdoor entertainment costs"]
     },
-    "np": {
-      "name": "स्मार्ट ४K LED टेलिभिजन",
-      "specs": ["३२\"–६५\" स्क्रिन आकार", "बिल्ट-इन एप्स र वाईफाई", "१ वर्ष वारेन्टी सहयोग"],
-      "advantages": ["घरमै हल जस्तै सिनेमाको अनुभूति", "बिल्ट-इन स्मार्ट एप्स र वाईफाई जडान", "पारिवारिक मनोरञ्जनको खर्च बचत"]
+    np: {
+      name: "स्मार्ट ४K LED टेलिभिजन",
+      specs: ["३२\"–६५\" स्क्रिन आकार", "बिल्ट-इन एप्स र वाईफाई", "१ वर्ष वारेन्टी सहयोग"],
+      advantages: ["घरमै हल जस्तै सिनेमाको अनुभूति", "बिल्ट-इन स्मार्ट एप्स र वाईफाई जडान", "पारिवारिक मनोरञ्जनको खर्च बचत"]
     }
   },
   {
@@ -226,7 +250,7 @@ const categoryBenefits: Record<Category, {
     np: {
       name: "डिशहोम र फाइबरनेट जडान",
       specs: ["टिभी + इन्टरनेट जडान", "सोही दिन जडान", "अधिकृत साझेदार"],
-      "advantages": ["इन्टरनेट र टिभी जडान एकै ठाउँमा", "सोही दिन जडान र स्थानीय प्राविधिक सहयोग", "विद्यार्थी र घरबाट काम गर्नेलाई उपयुक्त"]
+      advantages: ["इन्टरनेट र टिभी जडान एकै ठाउँमा", "सोही दिन जडान र स्थानीय प्राविधिक सहयोग", "विद्यार्थी र घरबाट काम गर्नेलाई उपयुक्त"]
     }
   },
   {
@@ -260,77 +284,7 @@ export default function Products({ isNepali, phoneNumber }: ProductsProps) {
         }
       })
       .catch((err) => console.error("Error loading products catalog:", err))
-  }, [])ame: "Room Heater & Fan Heater",
-        specs: ["Tip-over safety cut-off", "Adjustable thermostat", "Energy-efficient coils"],
-        advantages: ["Rapid warmth distribution in winter rooms", "Built-in tip-over safety cut-off switch", "Lightweight and fully portable"]
-      },
-      np: {
-        name: "रुम हिटर र फ्यान हिटर",
-        specs: ["ढल्किँदा अटो बन्द हुने", "मिलाउन मिल्ने थर्मोस्ट्याट", "ऊर्जा-कुशल कोइल"],
-        advantages: ["कोठामा तुरुन्तै समान रूपमा तातो फैलाउने", "ढल्किँदा आफैं बन्द हुने सुरक्षा स्विच", "हल्का र सजिलै सार्न मिल्ने"]
-      }
-    },
-    {
-      id: 8,
-      cat: "heating",
-      icon: BatteryCharging,
-      en: {
-        name: "Solar Panel + Backup System",
-        specs: ["On-grid & off-grid setups", "Inverter + battery backup", "Free site assessment"],
-        advantages: ["Uninterrupted power during load-shedding", "Reduces high grid electricity bills", "Eco-friendly clean energy source"]
-      },
-      np: {
-        name: "सोलार प्यानल + ब्याकअप प्रणाली",
-        specs: ["अन-ग्रिड र अफ-ग्रिड सेटअप", "इन्भर्टर + ब्याट्री ब्याकअप", "निःशुल्क साइट निरीक्षण"],
-        advantages: ["लोडसेडिङको समयमा पनि निरन्तर बिजुली", "उच्च बिजुली महसुल घटाउने", "पर्यावरण-मैत्री स्वच्छ ऊर्जा"]
-      }
-    },
-    {
-      id: 9,
-      cat: "electronics",
-      icon: Tv,
-      en: {
-        name: "Smart 4K LED Television",
-        specs: ['32"–65" screen sizes', "Built-in apps & WiFi", "1-year warranty support"],
-        advantages: ["Stunning theater-like cinema visuals at home", "Built-in smart apps & WiFi connectivity", "Reduces family outdoor entertainment costs"]
-      },
-      np: {
-        name: "स्मार्ट ४K LED टेलिभिजन",
-        specs: ['३२"–६५" स्क्रिन आकार', "बिल्ट-इन एप्स र वाईफाई", "१ वर्ष वारेन्टी सहयोग"],
-        advantages: ["घरमै हल जस्तै सिनेमाको अनुभूति", "बिल्ट-इन स्मार्ट एप्स र वाईफाई जडान", "पारिवारिक मनोरञ्जनको खर्च बचत"]
-      }
-    },
-    {
-      id: 11,
-      cat: "electronics",
-      icon: Wind,
-      en: {
-        name: "DishHome & FiberNet Setup",
-        specs: ["TV + internet connection", "Same-day installation", "Authorized partner"],
-        advantages: ["All-in-one high-speed internet & TV connection", "Same-day installation & local support", "Perfect for students & remote work"]
-      },
-      np: {
-        name: "डिशहोम र फाइबरनेट जडान",
-        specs: ["टिभी + इन्टरनेट जडान", "सोही दिन जडान", "अधिकृत साझेदार"],
-        advantages: ["इन्टरनेट र टिभी जडान एकै ठाउँमा", "सोही दिन जडान र स्थानीय प्राविधिक सहयोग", "विद्यार्थी र घरबाट काम गर्नेलाई उपयुक्त"]
-      }
-    },
-    {
-      id: 12,
-      cat: "electronics",
-      icon: Zap,
-      en: {
-        name: "Voltage Stabilizer",
-        specs: ["Protects TV, fridge & AC", "Wide voltage range", "V-Guard authorized"],
-        advantages: ["Protects TV, Fridge & AC motherboard from damage", "Prevents appliance burnouts during voltage spikes", "Extends lifespan of electronics"]
-      },
-      np: {
-        name: "भोल्टेज स्टेबिलाइजर",
-        specs: ["टिभी, फ्रिज र AC सुरक्षा", "फराकिलो भोल्टेज दायरा", "भि-गार्ड अधिकृत"],
-        advantages: ["टिभी, फ्रिज र AC को मदरबोर्ड सुरक्षा", "भोल्टेज तलमाथि हुँदा सामान बिग्रिन नदिने", "इलेक्ट्रोनिक्स सामानको आयु बढाउने"]
-      }
-    }
-  ]
+  }, [])
 
   const categoriesList: { key: "all" | Category; en: string; np: string }[] = [
     { key: "all", en: "All Products", np: "सबै उत्पादनहरू" },
