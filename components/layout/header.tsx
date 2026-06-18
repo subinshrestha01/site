@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { Sun, Moon, Phone, Zap, Menu, X } from "lucide-react"
+import { Sun, Moon, Zap, Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 type PageKey = "home" | "catalog" | "services" | "contact"
@@ -14,6 +14,7 @@ type HeaderProps = {
   activePage: PageKey
   setActivePage: (p: PageKey) => void
   phoneNumber: string
+  openBookingDrawer: (service: string) => void
 }
 
 export default function Header({
@@ -23,7 +24,8 @@ export default function Header({
   toggleTheme,
   activePage,
   setActivePage,
-  phoneNumber
+  phoneNumber,
+  openBookingDrawer
 }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -131,13 +133,13 @@ export default function Header({
             {theme === "dark" ? <Sun className="h-4.5 w-4.5" /> : <Moon className="h-4.5 w-4.5" />}
           </button>
 
-          {/* Quick Call */}
+          {/* Quick Request Repair Button (Reason 1) */}
           <Button
-            render={<a href={`tel:${phoneNumber}`} />}
-            className="hidden gap-2 rounded-full font-semibold shadow-md sm:inline-flex"
+            onClick={() => openBookingDrawer("General Diagnostics & Repair")}
+            className="hidden gap-2 rounded-full font-semibold shadow-md sm:inline-flex bg-primary text-primary-foreground border-transparent hover:bg-primary/90 transition-transform hover:scale-105 active:scale-95"
           >
-            <Phone className="h-4 w-4" />
-            {phoneNumber}
+            <Zap className="h-4 w-4" />
+            {isNepali ? "मर्मत अनुरोध" : "Request a Repair"}
           </Button>
 
           {/* Mobile menu trigger */}
@@ -167,11 +169,14 @@ export default function Header({
               </button>
             ))}
             <Button
-              render={<a href={`tel:${phoneNumber}`} />}
-              className="mt-2 w-full gap-2 rounded-full font-semibold"
+              onClick={() => {
+                openBookingDrawer("General Diagnostics & Repair")
+                setMobileMenuOpen(false)
+              }}
+              className="mt-2 w-full gap-2 rounded-full font-semibold bg-primary text-primary-foreground border-transparent hover:bg-primary/90"
             >
-              <Phone className="h-4 w-4" />
-              {isNepali ? "अहिले कल गर्नुहोस्" : "Call Now"}
+              <Zap className="h-4 w-4" />
+              {isNepali ? "मर्मत अनुरोध गर्नुहोस्" : "Request a Repair"}
             </Button>
           </nav>
         </div>

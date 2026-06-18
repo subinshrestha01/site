@@ -11,7 +11,6 @@ import Hero from "@/components/sections/hero"
 import Products from "@/components/sections/products"
 import Services from "@/components/sections/services"
 import Contact from "@/components/sections/contact"
-
 type PageKey = "home" | "catalog" | "services" | "contact"
 
 /* -------------------------------------------------------------------------- */
@@ -83,22 +82,36 @@ export default function ElectronicsCenter() {
   const [isBookingOpen, setIsBookingOpen] = useState(false)
   const [selectedService, setSelectedService] = useState(servicesList[0].enName)
 
-  // Initialize theme from system preference
+  // Initialize theme and language from localStorage / system preference
   useEffect(() => {
+    // Language
+    const savedLang = localStorage.getItem("isNepali")
+    if (savedLang !== null) {
+      setIsNepali(savedLang === "true")
+    }
+
+    // Theme
+    const savedTheme = localStorage.getItem("theme") as "light" | "dark" | null
     const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches
-    const initial = prefersDark ? "dark" : "light"
-    setTheme(initial)
+    const initialTheme = savedTheme || (prefersDark ? "dark" : "light")
+    setTheme(initialTheme)
     document.documentElement.classList.remove("light", "dark")
-    document.documentElement.classList.add(initial)
+    document.documentElement.classList.add(initialTheme)
   }, [])
 
   const toggleTheme = () => {
     setTheme((prev) => {
       const next = prev === "dark" ? "light" : "dark"
+      localStorage.setItem("theme", next)
       document.documentElement.classList.remove("light", "dark")
       document.documentElement.classList.add(next)
       return next
     })
+  }
+
+  const handleSetIsNepali = (val: boolean) => {
+    setIsNepali(val)
+    localStorage.setItem("isNepali", String(val))
   }
 
   const goTo = (p: PageKey) => {
@@ -121,7 +134,7 @@ export default function ElectronicsCenter() {
 
   return (
     <div
-      className="flex min-h-dvh flex-col bg-background mouse-glow-container overflow-x-hidden"
+      className={`flex min-h-dvh flex-col bg-background mouse-glow-container overflow-x-hidden ${isNepali ? "font-nepali" : ""}`}
       onMouseMove={handleMouseMove}
     >
       {/* Ambient Mouse tracking light glow background */}
@@ -130,12 +143,13 @@ export default function ElectronicsCenter() {
       {/* Premium Header */}
       <Header
         isNepali={isNepali}
-        setIsNepali={setIsNepali}
+        setIsNepali={handleSetIsNepali}
         theme={theme}
         toggleTheme={toggleTheme}
         activePage={activePage}
         setActivePage={goTo}
         phoneNumber={PHONE_PRODUCT}
+        openBookingDrawer={handleOpenBooking}
       />
 
       {/* Main Page Container with Smooth Mounting Transitions */}
@@ -148,6 +162,7 @@ export default function ElectronicsCenter() {
               phoneProduct={PHONE_PRODUCT}
               phoneService={PHONE_SERVICE}
               brands={brands}
+              openBookingDrawer={handleOpenBooking}
             />
           )}
 
@@ -176,6 +191,7 @@ export default function ElectronicsCenter() {
               mapLinkUrl={MAP_LINK}
             />
           )}
+
         </div>
       </main>
 

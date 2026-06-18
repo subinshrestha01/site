@@ -1,6 +1,6 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
-import { Geist, Geist_Mono, Manrope } from 'next/font/google'
+import { Geist, Geist_Mono, Manrope, Mukta } from 'next/font/google'
 import './globals.css'
 
 const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] })
@@ -12,6 +12,11 @@ const manrope = Manrope({
   variable: '--font-manrope',
   subsets: ['latin'],
   weight: ['600', '700', '800'],
+})
+const mukta = Mukta({
+  variable: '--font-mukta',
+  subsets: ['devanagari', 'latin'],
+  weight: ['400', '500', '600', '700', '800'],
 })
 
 export const metadata: Metadata = {
@@ -54,9 +59,71 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${manrope.variable} bg-background`}
+      className={`${geistSans.variable} ${geistMono.variable} ${manrope.variable} ${mukta.variable} bg-background`}
     >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var theme = localStorage.getItem('theme');
+                  if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                    document.documentElement.classList.add('dark');
+                  } else {
+                    document.documentElement.classList.remove('dark');
+                  }
+                } catch (e) {}
+              })();
+            `
+          }}
+        />
+      </head>
       <body className="font-sans antialiased">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "LocalBusiness",
+              "name": "New Good Choice Electronic Center",
+              "image": "https://goodchoice.com.np/imgs/lg.png",
+              "@id": "https://goodchoice.com.np/#localbusiness",
+              "url": "https://goodchoice.com.np",
+              "telephone": "+97798410385987",
+              "priceRange": "$$",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Thankot",
+                "addressLocality": "Kathmandu",
+                "postalCode": "44600",
+                "addressCountry": "NP"
+              },
+              "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": 27.6865,
+                "longitude": 85.2123
+              },
+              "openingHoursSpecification": {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": [
+                  "Monday",
+                  "Tuesday",
+                  "Wednesday",
+                  "Thursday",
+                  "Friday",
+                  "Saturday",
+                  "Sunday"
+                ],
+                "opens": "08:00",
+                "closes": "20:00"
+              },
+              "sameAs": [
+                "https://www.facebook.com/GoodChoiceElectronicCenter/"
+              ]
+            })
+          }}
+        />
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>

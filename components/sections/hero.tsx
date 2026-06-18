@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { MapPin, ArrowRight, PhoneCall, ShieldCheck, Wrench, Clock, Tv, Wind, Sun, BatteryCharging, Sparkles, Star } from "lucide-react"
+import { MapPin, ArrowRight, ShieldCheck, Wrench, Clock, Tv, Sun, Star, Flame } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 
@@ -13,42 +13,38 @@ type HeroProps = {
   phoneProduct: string
   phoneService: string
   brands: { name: string; logo: string; tooltipEn: string; tooltipNp: string }[]
+  openBookingDrawer: (service: string) => void
 }
 
-export default function Hero({ isNepali, setActivePage, phoneProduct, phoneService, brands }: HeroProps) {
+export default function Hero({ isNepali, setActivePage, phoneProduct, phoneService, brands, openBookingDrawer }: HeroProps) {
   const [activeGuideIdx, setActiveGuideIdx] = useState(0)
   const [currentReview, setCurrentReview] = useState(0)
 
+  // Scannable Appliance Care Tips (Outcome-based and scannable neighborly tone)
   const careGuides = [
     {
       titleEn: "Is it Worth Repairing?",
       titleNp: "के मर्मत गर्नु उपयुक्त छ?",
-      descEn: "Standard rule: If the repair cost is less than 50% of the price of a brand new appliance, and the unit is under 5 years old, always repair it! It saves money and reduces electronic waste.",
-      descNp: "साधारण नियम: यदि मर्मत खर्च नयाँ सामानको मूल्यको ५०% भन्दा कम छ र सामान ५ वर्षभन्दा पुरानो छैन भने मर्मत गर्नु नै फाइदाजनक हुन्छ। यसले पैसा बचत गर्छ र वातावरणीय प्रदूषण घटाउँछ।"
+      descEn: "• **Standard Rule**: Repair if the cost is less than 50% of buying a new unit.\n• **Age Check**: Best to repair if the appliance is under 5 years old.\n• **Value**: Saves money and reduces electronics waste.",
+      descNp: "• **साधारण नियम**: यदि मर्मत खर्च नयाँ मूल्यको ५०% भन्दा कम छ भने मर्मत गर्नुहोस्।\n• **उमेर जाँच**: ५ वर्षभन्दा कम पुराना उपकरण मर्मत गर्नु सबैभन्दा उत्तम हुन्छ।\n• **बचत**: यसले पैसा बचाउँछ र वातावरणीय प्रदूषण पनि घटाउँछ।"
     },
     {
-      titleEn: "Winter Solar Water Geyser Care Alert",
+      titleEn: "Solar Water Heater Winter Care",
       titleNp: "हिउँदमा सोलार वाटर हिटरको हेरचाह",
-      descEn: "Dust and smog block sunlight from heating the vacuum tubes. Wipe the tubes gently with water and a soft cloth every autumn. Also, flush the solar tank to remove scale build-up for 30% hotter water.",
-      descNp: "धूलो र कुहिरोले सोलारका भ्याकुम ट्युबहरू तातो हुन दिँदैन। हरेक शरद ऋतुमा ट्युबहरूलाई नरम कपडा र पानीले बिस्तारै पुछ्नुहोस्। साथै, ३०% बढी तातो पानी पाउन सोलार ट्याङ्क भित्र जमेको लेदो सफा गर्नुहोस्।"
+      descEn: "• **Wipe Clean**: Clean tubes with water and a soft cloth every autumn to remove dust.\n• **Flushing**: Flush the tank once a year to clear scale build-up.\n• **Performance**: Restores up to 30% hotter water supply.",
+      descNp: "• **नियमित सफाइ**: धुलो हटाउन हरेक शरद ऋतुमा ट्युबहरूलाई नरम कपडा र पानीले पुछ्नुहोस्।\n• **ट्याङ्क सफा**: भित्र जमेको लेदो हटाउन वर्षमा एक पटक ट्याङ्क सफा गर्नुहोस्।\n• **उत्कृष्ट काम**: ३०% सम्म बढी तातो पानी पाउन मद्दत गर्दछ।"
     },
     {
-      titleEn: "Chimney Oil Cup Warning",
+      titleEn: "Kitchen Chimney Oil Cup Alert",
       titleNp: "किचन चिम्नी ओइल कप चेतावनी",
-      descEn: "Never let the grease collector cup overflow! Sticky oil build-up increases motor resistance, causing overheating, and can catch fire if gas flames rise too high. Clean it every 2 weeks.",
-      descNp: "चिम्नीको तेल जम्मा हुने कपलाई कहिल्यै भरिन नदिनुहोस्! जमेको चिल्लोले गर्दा मोटर तात्ने र ग्यासको आगो ठूलो हुँदा आगलागी हुने उच्च जोखिम हुन्छ। यसलाई हरेक २ हप्तामा सफा गर्नुहोस्।"
+      descEn: "• **Empty Regularly**: Clean the grease collector cup every 2 weeks.\n• **Prevent Fire**: Overflowing grease increases fire hazard under hot stoves.\n• **Motor Health**: Dirty cups increase motor load and risk overheating.",
+      descNp: "• **नियमित खाली**: तेल जम्मा हुने कपलाई हरेक २ हप्तामा सफा गर्नुहोस्।\n• **आगलागीबाट बच्नुहोस्**: कप भरिएर चिल्लो चुलोमा खस्दा आगो लाग्ने खतरा हुन्छ।\n• **मोटर सुरक्षा**: धेरै चिल्लो जम्दा मोटर तातेर बिग्रिने जोखिम हुन्छ।"
     },
     {
-      titleEn: "Magnesium Anode: The Silent Solar Protector",
-      titleNp: "म्याग्नेसियम एनोड: सोलारको मौन रक्षक",
-      descEn: "Hard water eats away the inner steel tank of solar heaters. The magnesium anode rod attracts rust, sacrificing itself to protect your tank. Replace this rod every 2 years to prevent expensive tank cracks.",
-      descNp: "कडा पानीले सोलार हिटरको भित्री स्टील ट्याङ्कलाई बिस्तारै नष्ट गर्छ। म्याग्नेसियम एनोड रडले खियालाई आफैंतिर आकर्षित गरी ट्याङ्क सुरक्षित राख्छ। ट्याङ्क फुट्न नदिन हरेक २ वर्षमा यो रड फेर्नुहोस्।"
-    },
-    {
-      titleEn: "TV Screen Spray Warning",
-      titleNp: "टिभी स्क्रिनमा स्प्रे गर्दा सावधानी",
-      descEn: "Never spray glass cleaners or water directly onto LED screen surfaces! Liquid runs down into the bottom board (T-Con), causing instant circuit board burnout and vertical lines. Spray onto a microfiber cloth first.",
-      descNp: "LED टिभी स्क्रिनमा कहिल्यै पनि सिधै ग्लास क्लिनर वा पानी स्प्रे नगर्नुहोस्! तरल पदार्थ बगेर तल्लो बोर्ड (T-Con) मा पुग्दा सर्ट भई स्क्रिनमा ठाडो रेखाहरू आउने वा टिभी जल्दछ। सधैं पहिले कपडामा स्प्रे गर्नुहोस्।"
+      titleEn: "TV Screen Care Warning",
+      titleNp: "टिभी स्क्रिन सफा गर्दा सावधानी",
+      descEn: "• **Never Spray Directly**: Spraying liquid directly onto LED panels causes circuit burnout.\n• **Use Microfiber**: Always spray cleaner onto a microfiber cloth first, then wipe.\n• **Dry Wipe**: Ensure no moisture drips into the bottom screen borders.",
+      descNp: "• **सिधै स्प्रे नगर्नुहोस्**: स्क्रिनमा पानी वा ग्लास क्लिनर स्प्रे गर्दा भित्री सर्किट बल्न सक्छ।\n• **कपडा प्रयोग**: सधैं पहिले माइक्रोफाइबर कपडामा स्प्रे गरेर मात्र सफा गर्नुहोस्।\n• **सुक्खा पुछ्ने**: स्क्रिनको तल्लो किनारामा कुनै पनि तरल पदार्थ जान नदिनुहोस्।"
     }
   ]
 
@@ -58,21 +54,24 @@ export default function Hero({ isNepali, setActivePage, phoneProduct, phoneServi
       location: "Thankot, KTM",
       textEn: "Excellent chimney cleaning service. The team was highly professional, worked fast, and left the kitchen clean.",
       textNp: "उत्कृष्ट चिम्नी सफाइ सेवा। टोली धेरै व्यावसायिक थिए, छिटो काम गरे र भान्सा सफा राखे।",
-      stars: 5
+      stars: 5,
+      avatar: "RS"
     },
     {
       name: "Sabina Thapa",
       location: "Kalanki, KTM",
       textEn: "Highly recommend for TV repair. They diagnosed the power board issue and fixed my LED screen on the same day!",
       textNp: "टिभी मर्मतको लागि धेरै सिफारिस गर्दछु। उनीहरूले पावर बोर्डको समस्या पत्ता लगाई सोही दिन मेरो LED स्क्रिन बनाए!",
-      stars: 5
+      stars: 5,
+      avatar: "ST"
     },
     {
       name: "Rajesh KC",
       location: "Sitapaila, KTM",
       textEn: "Best solar service in town. Genuine pricing and the backup system has been working flawlessly through winters.",
       textNp: "सहरकै उत्कृष्ट सोलार सेवा। वास्तविक मूल्य र ब्याकअप प्रणालीले हिउँदभरि पनि राम्रोसँग काम गरिरहेको छ।",
-      stars: 5
+      stars: 5,
+      avatar: "RK"
     }
   ]
 
@@ -100,47 +99,12 @@ export default function Hero({ isNepali, setActivePage, phoneProduct, phoneServi
     }
   ]
 
+  // Benefit-driven category shortcuts with Flame icon replacing Wind for chimneys
   const categories = [
-    { icon: Tv, en: "Electronics", np: "इलेक्ट्रोनिक्स", target: "catalog" as PageKey },
-    { icon: Wind, en: "Kitchen Chimneys", np: "किचन चिम्नी", target: "catalog" as PageKey },
-    { icon: Sun, en: "Solar Systems", np: "सोलार प्रणाली", target: "catalog" as PageKey },
-    { icon: Wrench, en: "Expert Services", np: "मर्मत तथा जडान", target: "services" as PageKey }
-  ]
-
-  // Workflow steps
-  const steps = [
-    {
-      labelEn: "1. Request Service",
-      labelNp: "१. सेवा अनुरोध",
-      titleEn: "Easy Booking",
-      titleNp: "सजिलो बुकिङ",
-      descEn: "Call us directly or send a booking request via WhatsApp in 30 seconds. No complex registration needed.",
-      descNp: "हामीलाई सिधै कल गर्नुहोस् वा ३० सेकेन्डमै ह्वाट्सएप मार्फत बुकिङ गर्नुहोस्। कुनै झन्झटिलो दर्ता आवश्यक छैन।"
-    },
-    {
-      labelEn: "2. Booking Confirmed",
-      labelNp: "२. बुकिङ निश्चित",
-      titleEn: "Instant Dispatch",
-      titleNp: "तुरुन्त व्यवस्थापन",
-      descEn: "We review details, confirm parts availability, and coordinate the perfect visit time matching your schedule.",
-      descNp: "हामी विवरण समीक्षा गर्छौं, स्पेयर पार्टस्को उपलब्धता निश्चित गर्छौं र तपाईंको समय तालिका अनुसार समय मिलाउँछौं।"
-    },
-    {
-      labelEn: "3. Technician Visit",
-      labelNp: "३. प्राविधिक आगमन",
-      titleEn: "On-Site Repair",
-      titleNp: "घरमै मर्मत सेवा",
-      descEn: "Our expert technician arrives at your door across Kathmandu with advanced equipment and genuine spare parts.",
-      descNp: "हाम्रा विशेषज्ञ प्राविधिक अत्याधुनिक उपकरण र सक्कली पार्ट्स लिएर काठमाडौँ उपत्यकाभित्र तपाईंको ढोकामै आउँछन्।"
-    },
-    {
-      labelEn: "4. Done & Warranted",
-      labelNp: "४. काम सम्पन्न र वारेन्टी",
-      titleEn: "Satisfaction Guaranteed",
-      titleNp: "सन्तुष्टिको ग्यारेन्टी",
-      descEn: "Test the appliance, complete the payment, and enjoy official service warranty support for added peace of mind.",
-      descNp: "सामान परिक्षण गर्नुहोस्, भुक्तानी गर्नुहोस् र थप ढुक्क हुनको लागि आधिकारिक मर्मत वारेन्टी सेवा पाउनुहोस्।"
-    }
+    { icon: Tv, en: "Home Electronics & TV", np: "घरायसी इलेक्ट्रोनिक्स र टिभी", target: "catalog" as PageKey },
+    { icon: Flame, en: "Smoke-Free Kitchen Chimneys", np: "धुवाँ-रहित भान्सा (चिम्नी)", target: "catalog" as PageKey },
+    { icon: Sun, en: "Heating & Solar Systems", np: "सोलार र हिटिङ प्रणाली", target: "catalog" as PageKey },
+    { icon: Wrench, en: "Fix Your Appliances Today", np: "आधिकारिक मर्मत सेवा", target: "services" as PageKey }
   ]
 
   const marqueeRow = [...brands, ...brands]
@@ -157,52 +121,45 @@ export default function Hero({ isNepali, setActivePage, phoneProduct, phoneServi
         }}
       />
 
-      {/* Hero section */}
+      {/* Hero section - Optimized for First Impressions & Authentic Storefront Image */}
       <section className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:py-24 lg:px-8">
         
         {/* Left column text */}
         <div className="animate-in fade-in slide-in-from-bottom-5 duration-700">
           <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-4 py-1.5 text-xs font-semibold text-foreground backdrop-blur-md">
             <MapPin className="h-3.5 w-3.5 text-primary" />
-            {isNepali ? "काठमाडौँ उपत्यका · वि.सं. २०६९ देखि" : "Kathmandu Valley · Since 2069 B.S."}
+            {isNepali ? "थानकोट, काठमाडौँ उपत्यका · वि.सं. २०६९ देखि" : "Thankot, Kathmandu Valley · Since 2069 B.S."}
           </span>
           
-          <h1 className="mt-6 text-balance font-heading text-4xl font-extrabold leading-[1.05] tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+          {/* Crisp, one-sentence value proposition (Reason 1) */}
+          <h1 className="mt-6 text-balance font-heading text-4xl font-extrabold leading-[1.1] tracking-tight text-foreground sm:text-5xl lg:text-6xl">
             {isNepali ? (
               <>
-                तपाईंको घरका लागि <span className="text-primary animate-pulse">भरपर्दो इलेक्ट्रोनिक्स</span> र सेवा
+                १४ वर्षभन्दा बढी समयदेखि काठमाडौँको <span className="text-primary">भरपर्दो अधिकृत इलेक्ट्रोनिक्स</span> साझेदार र विशेषज्ञ मर्मत केन्द्र
               </>
             ) : (
               <>
-                Trusted <span className="text-primary animate-pulse">Electronics</span> &amp; Service for Your Home
+                Kathmandu’s <span className="text-primary">Trusted Authorized Electronics</span> Partner &amp; Expert Repair Center for Over 14 Years
               </>
             )}
           </h1>
           
           <p className="mt-5 max-w-lg text-pretty text-lg leading-relaxed text-muted-foreground">
             {isNepali
-              ? "किचन उपकरण, हिटिङ, सोलार र इलेक्ट्रोनिक्स — बिक्री, जडान र मर्मत सबै एकै ठाउँमा। काठमाडौँको भरपर्दो र विश्वसनीय पसल।"
-              : "Kitchen appliances, heating, solar and electronics — sales, installation and repair, all in one place. Kathmandu's trusted local service."}
+              ? "स्मार्ट टिभी, अटो-क्लिन चिम्नी, सोलार वाटर हिटर र भोल्टेज स्टेबिलाइजरको आधिकारिक विक्रेता र मर्मत सेवा। थानकोट र काठमाडौँ उपत्यकाभर सेवारत।"
+              : "Authorized dealer and professional support for smart TVs, auto-clean chimneys, solar water heaters, and power stabilizers. Serving Thankot, Kalanki, and Kathmandu Valley since 2069 B.S."}
           </p>
 
-          {/* Call-to-actions */}
-          <div className="mt-8 flex flex-wrap gap-3">
+          {/* Primary High-Contrast Call-to-Action only (Reason 1) */}
+          <div className="mt-8">
             <Button
               size="lg"
-              onClick={() => setActivePage("catalog")}
-              className="gap-2 rounded-full font-bold shadow-lg transition-transform hover:scale-105"
+              onClick={() => openBookingDrawer("General Diagnostics & Repair")}
+              className="gap-2.5 rounded-full font-bold px-8 py-6 text-base shadow-xl transition-all duration-300 hover:scale-105 bg-primary text-primary-foreground border-transparent hover:bg-primary/95"
             >
-              {isNepali ? "उत्पादन हेर्नुहोस्" : "Browse Products"}
-              <ArrowRight className="h-4 w-4" />
-            </Button>
-            <Button
-              render={<a href={`tel:${phoneService}`} />}
-              size="lg"
-              variant="outline"
-              className="gap-2 rounded-full font-bold bg-card/40 backdrop-blur-sm border-border hover:bg-muted transition-transform hover:scale-105"
-            >
-              <PhoneCall className="h-4 w-4 text-primary" />
-              {isNepali ? "मर्मत कल गर्नुहोस्" : "Call for Repair"}
+              <Wrench className="h-5 w-5" />
+              {isNepali ? "मर्मत अनुरोध गर्नुहोस्" : "Request a Repair"}
+              <ArrowRight className="h-5 w-5" />
             </Button>
           </div>
 
@@ -220,35 +177,55 @@ export default function Hero({ isNepali, setActivePage, phoneProduct, phoneServi
           </dl>
         </div>
 
-        {/* Right column category visualizer */}
+        {/* Right column: Authentic storefront and team image (Reason 1) */}
         <div className="relative animate-in fade-in zoom-in-95 duration-700 lg:justify-self-end">
-          <div className="grid grid-cols-2 gap-4">
-            {categories.map((c, i) => {
-              const Icon = c.icon
-              return (
-                <button
-                  key={i}
-                  onClick={() => setActivePage(c.target)}
-                  className={`group flex flex-col items-center justify-center gap-3 rounded-3xl border border-border bg-card/50 p-8 text-center shadow-sm backdrop-blur-sm transition-all duration-500 hover:border-primary/25 hover:shadow-md hover:bg-card focus:outline-none ${
-                    i % 2 === 1
-                      ? "translate-y-6 hover:translate-y-4"
-                      : "hover:-translate-y-2"
-                  }`}
-                >
-                  <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary transition-all duration-500 group-hover:scale-110 group-hover:bg-primary group-hover:text-primary-foreground group-hover:rotate-6">
-                    <Icon className="h-8 w-8" />
-                  </span>
-                  <span className="font-heading text-sm font-bold text-card-foreground transition-colors duration-300 group-hover:text-primary">
-                    {isNepali ? c.np : c.en}
-                  </span>
-                </button>
-              )
-            })}
-          </div>
+          <Card className="overflow-hidden rounded-3xl border-primary/20 bg-card shadow-2xl transition-all duration-300 hover:scale-[1.01] hover:border-primary/35 max-w-lg">
+            <img 
+              src="/imgs/storefront.png" 
+              alt="New Good Choice Electronic Center Thankot Storefront & Team" 
+              className="w-full h-auto object-cover"
+            />
+            <div className="p-5 bg-muted/30 border-t border-border">
+              <span className="text-[10px] font-extrabold uppercase tracking-widest text-primary block mb-1">
+                {isNepali ? "हाम्रो आधिकारिक शोरूम - थानकोट, काठमाडौँ" : "Our Authorized Showroom - Thankot, Kathmandu"}
+              </span>
+              <h4 className="font-heading text-base font-bold text-foreground">
+                {isNepali ? "न्यू गुड च्वाइस इलेक्ट्रोनिक्स" : "New Good Choice Electronic Center"}
+              </h4>
+              <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
+                {isNepali 
+                  ? "हाम्रो शोरूममा आउनुहोस् वा सोही दिन घरमै प्राविधिक सेवा पाउन मर्मत अनुरोध पठाउनुहोस्।" 
+                  : "Visit our showroom in Thankot or send a repair request online for same-day professional home-visit support."}
+              </p>
+            </div>
+          </Card>
         </div>
       </section>
 
-      {/* Auto-scroll partner marquee */}
+      {/* Category Shortcuts Section (Reason 2 - Visual Icons) */}
+      <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 border-t border-border/60">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+          {categories.map((c, i) => {
+            const Icon = c.icon
+            return (
+              <button
+                key={i}
+                onClick={() => setActivePage(c.target)}
+                className="group flex flex-col items-center justify-center gap-3 rounded-2xl border border-border bg-card/45 p-6 text-center shadow-sm backdrop-blur-sm transition-all duration-300 hover:border-primary/25 hover:scale-105 hover:bg-card focus:outline-none"
+              >
+                <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary transition-all duration-300 group-hover:scale-110 group-hover:bg-primary group-hover:text-primary-foreground">
+                  <Icon className="h-6 w-6" />
+                </span>
+                <span className="font-heading text-xs font-bold text-foreground transition-colors duration-300 group-hover:text-primary leading-tight">
+                  {isNepali ? c.np : c.en}
+                </span>
+              </button>
+            )
+          })}
+        </div>
+      </section>
+
+      {/* Auto-scroll partner marquee (Trusted partner banner immediately below hero section - Reason 3) */}
       <section className="border-y border-border bg-muted/20 py-10">
         <p className="mb-6 text-center text-xs font-semibold uppercase tracking-[0.25em] text-muted-foreground">
           {isNepali ? "हाम्रा अधिकृत साझेदार ब्रान्डहरू" : "Our Authorized Partner Brands"}
@@ -319,28 +296,43 @@ export default function Hero({ isNepali, setActivePage, phoneProduct, phoneServi
         </div>
       </section>
 
-
-      {/* Interactive "Did You Know?" Care Carousel */}
+      {/* Appliance Care Carousel - Outcome-based Neighborly Title (Reason 5) */}
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 border-t border-border/60 animate-slide-up-fade">
         <div className="mx-auto max-w-2xl text-center mb-8">
           <span className="inline-block rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-primary">
-            {isNepali ? "के तपाईंलाई थाहा छ?" : "Did You Know? Appliance Care"}
+            {isNepali ? "उपकरण सुरक्षा" : "Appliance Care"}
           </span>
           <h3 className="mt-4 font-heading text-2xl font-extrabold text-foreground sm:text-3xl">
-            {isNepali ? "उपकरण हेरचाह र मर्मत निर्देशिका" : "Crucial Appliance Maintenance Guides"}
+            {isNepali ? "सामान धेरै समय टिकाउने तरिकाहरू" : "Ways to Make Your Appliances Last Longer"}
           </h3>
         </div>
 
         <div className="max-w-2xl mx-auto relative px-10">
-          <Card className="border-primary/20 bg-gradient-to-br from-card via-card to-primary/5 p-6 md:p-8 rounded-3xl shadow-sm text-center relative overflow-hidden min-h-[12rem] flex flex-col justify-between">
+          <Card className="border-primary/20 bg-gradient-to-br from-card via-card to-primary/5 p-6 md:p-8 rounded-3xl shadow-sm relative overflow-hidden min-h-[14rem] flex flex-col justify-between">
             {/* Carousel Content */}
             <div key={activeGuideIdx} className="animate-in fade-in duration-300">
-              <h4 className="font-heading text-sm font-extrabold text-primary mb-3">
+              <h4 className="font-heading text-base font-extrabold text-primary mb-3 text-center">
                 {isNepali ? careGuides[activeGuideIdx].titleNp : careGuides[activeGuideIdx].titleEn}
               </h4>
-              <p className="text-xs leading-relaxed text-muted-foreground font-medium md:text-sm">
-                {isNepali ? careGuides[activeGuideIdx].descNp : careGuides[activeGuideIdx].descEn}
-              </p>
+              
+              {/* Bulleted and scannable tips (Reason 5) */}
+              <div className="text-sm leading-relaxed text-muted-foreground space-y-2 max-w-lg mx-auto">
+                {(isNepali ? careGuides[activeGuideIdx].descNp : careGuides[activeGuideIdx].descEn).split('\n').map((line, i) => {
+                  const cleanLine = line.replace(/^•\s*/, "");
+                  const boldParts = cleanLine.split(/\*\*(.*?)\*\*/g);
+                  
+                  return (
+                    <div key={i} className="flex items-start gap-2 text-left">
+                      <span className="text-primary mt-1 shrink-0">•</span>
+                      <span>
+                        {boldParts.map((part, idx) => 
+                          idx % 2 === 1 ? <strong key={idx} className="text-foreground font-bold">{part}</strong> : part
+                        )}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
 
             <div className="mt-5 flex justify-center gap-1">
@@ -375,7 +367,7 @@ export default function Hero({ isNepali, setActivePage, phoneProduct, phoneServi
         </div>
       </section>
 
-      {/* Swipeable Testimonials Carousel */}
+      {/* Swipeable Testimonials Carousel with verified initials avatar (Reason 3) */}
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 border-t border-border/60 mb-10 animate-slide-up-fade">
         <div className="mx-auto max-w-2xl text-center mb-8">
           <span className="inline-block rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-primary">
@@ -398,13 +390,19 @@ export default function Hero({ isNepali, setActivePage, phoneProduct, phoneServi
               "{isNepali ? reviews[currentReview].textNp : reviews[currentReview].textEn}"
             </p>
 
-            <div className="mt-6 border-t border-border/60 pt-4">
-              <h4 className="font-heading text-sm font-bold text-card-foreground">
-                {reviews[currentReview].name}
-              </h4>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                {reviews[currentReview].location}
-              </p>
+            {/* Testimonials customer initial avatar representation (Reason 3) */}
+            <div className="mt-6 border-t border-border/60 pt-4 flex items-center justify-center gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary font-extrabold text-xs">
+                {reviews[currentReview].avatar}
+              </div>
+              <div className="text-left leading-tight">
+                <h4 className="font-heading text-sm font-bold text-card-foreground">
+                  {reviews[currentReview].name}
+                </h4>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  {reviews[currentReview].location}
+                </p>
+              </div>
             </div>
           </Card>
 

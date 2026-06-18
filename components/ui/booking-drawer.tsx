@@ -161,7 +161,7 @@ export default function BookingDrawer({
 
       {/* Drawer Content */}
       <div
-        className="relative z-10 w-full max-w-lg rounded-t-3xl border border-border bg-card p-6 shadow-2xl animate-in slide-in-from-bottom-1/2 duration-300 md:rounded-3xl md:animate-in md:zoom-in-95"
+        className="relative z-10 w-full max-w-lg rounded-t-3xl border border-border bg-card p-6 shadow-2xl animate-in slide-in-from-bottom-1/2 duration-300 md:rounded-3xl md:animate-in md:zoom-in-95 max-h-[85dvh] overflow-y-auto"
       >
         {/* Drag handle decoration for mobile */}
         <div className="mx-auto mb-4 h-1.5 w-12 rounded-full bg-muted-foreground/30 md:hidden" />

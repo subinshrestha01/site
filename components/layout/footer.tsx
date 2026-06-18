@@ -67,6 +67,7 @@ export default function Footer({
               </span>
             ))}
           </div>
+
         </div>
 
         {/* Links Column */}

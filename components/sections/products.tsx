@@ -1,8 +1,7 @@
 "use client"
 
-import { useState } from "react"
-import type { LucideIcon } from "lucide-react"
-import { Search, Tv, Wind, Sun, BatteryCharging, CircleCheckBig, Phone, CookingPot, Microwave, Droplets, Snowflake, Zap, Sparkles } from "lucide-react"
+import { useState, useEffect } from "react"
+import { Search, Tv, Wind, Sun, BatteryCharging, CircleCheckBig, Phone, CookingPot, Microwave, Droplets, Snowflake, Zap, Sparkles, Flame, HelpCircle } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -13,9 +12,29 @@ type Category = "kitchen" | "heating" | "electronics"
 type Product = {
   id: number
   cat: Category
-  icon: LucideIcon
+  iconName?: string
+  imageUrl?: string
   en: { name: string; specs: string[]; advantages: string[] }
   np: { name: string; specs: string[]; advantages: string[] }
+}
+
+const iconMap: Record<string, React.ComponentType<any>> = {
+  Sun,
+  Flame,
+  CookingPot,
+  Microwave,
+  Droplets,
+  Snowflake,
+  BatteryCharging,
+  Tv,
+  Wind,
+  Zap,
+  CircleCheckBig,
+  Phone
+}
+
+function getIconComponent(iconName: string) {
+  return iconMap[iconName] || HelpCircle
 }
 
 type ProductsProps = {
@@ -29,7 +48,7 @@ const categoryBenefits: Record<Category, {
 }> = {
   kitchen: {
     en: {
-      title: "Key Advantages of Auto-Clean Chimneys & Hobs",
+      title: "Enjoy a Smoke-Free Kitchen with Auto-Clean Chimneys",
       items: [
         "Lung Protection: Captures hazardous oil mist, heat, and carbon monoxide.",
         "Spotless Cabinets: Prevents grease particles from sticking to walls and tiles.",
@@ -37,7 +56,7 @@ const categoryBenefits: Record<Category, {
       ]
     },
     np: {
-      title: "अटो-क्लिन चिम्नी र चुलोका मुख्य फाइदाहरू",
+      title: "अटो-क्लिन चिम्नीको साथमा धुवाँ-रहित सफा भान्साको आनन्द लिनुहोस्",
       items: [
         "फोक्सोको सुरक्षा: हानिकारक चिल्लो, धुवाँ र कार्वन मोनोअक्साइड सोसेर लिन्छ।",
         "सफा क्याबिनेट र भित्ता: भित्ता र टायलहरूमा चिल्लो लेदो जम्न दिँदैन।",
@@ -59,131 +78,189 @@ const categoryBenefits: Record<Category, {
       items: [
         "शून्य बिजुली महसुल: तातो पानीको खर्चलाई ९०% सम्म कम गर्दछ।",
         "निरन्तर तातो पानी: डबल-वाल भ्याकुम ट्युबले हिउँदमा पनि पानी तातो राख्छ।",
-        "पर्यावरण मैत्री: कार्बन उत्सर्जन घटाउने पूर्णतया नवीकरणीय ऊर्जा।"
-      ]
-    }
-  },
-  electronics: {
+        "पर्यावरण मैत्री: कार्बन उत्सर्जनconst defaultProducts: Product[] = [
+  {
+    id: 5,
+    cat: "heating",
+    iconName: "Sun",
     en: {
-      title: "Premium Home Entertainment & Power Stabilization",
-      items: [
-        "Device Longevity: Stabilizers protect TVs and Fridges from high voltage surges.",
-        "Crystal Clear Vision: Ultra HD 4K displays with smart app interfaces.",
-        "Authorized Support: Certified technicians for connection setups and wiring."
-      ]
+      name: "Solar Water Heating System",
+      specs: ["100–300 L tank options", "Year-round hot water", "Low running cost"],
+      advantages: ["Once paid, unlimited free hot water", "Zero electricity bills", "Works efficiently even in cold winter days"]
     },
     np: {
-      title: "गुणस्तरीय घरायसी इलेक्ट्रोनिक्स र भोल्टेज सुरक्षा",
-      items: [
-        "उपकरणहरूको सुरक्षा: भोल्टेज उतारचढावबाट बहुमूल्य टिभी र फ्रिज जोगाउँछ।",
-        "क्रिस्टल क्लियर डिस्प्ले: स्मार्ट एप्स र उत्कृष्ट 4K गुणस्तरको अनुभव।",
-        "आधिकारिक सहयोग: अधिकृत प्राविधिकहरूद्वारा उत्कृष्ट जडान र वायरिङ।"
-      ]
+      name: "सोलार वाटर हिटिङ प्रणाली",
+      specs: ["१००–३०० लिटर ट्याङ्क विकल्प", "वर्षभरि तातो पानी", "कम सञ्चालन खर्च"],
+      advantages: ["एक पटकको लगानी, सधैंको लागि निःशुल्क तातो पानी", "शून्य बिजुली महसुल", "चिसो हिउँदमा पनि प्रभावकारी काम"]
+    }
+  },
+  {
+    id: 1,
+    cat: "kitchen",
+    iconName: "Flame",
+    en: {
+      name: "Auto-Clean Kitchen Chimney",
+      specs: ["Powerful 1200 m³/hr suction", "Touch & auto-clean control", "Hindware / Brio authorized"],
+      advantages: ["Protects lungs from harmful oil fumes & smoke", "Prevents sticky yellow walls & cabinets", "Zero maintenance auto-clean heating coils"]
+    },
+    np: {
+      name: "अटो-क्लिन किचन चिम्नी",
+      specs: ["१२०० m³/घण्टा शक्तिशाली सक्सन", "टच र अटो-क्लिन सुविधा", "हिन्दवेयर / ब्रियो अधिकृत"],
+      advantages: ["धुवाँ र हानिकारक चिल्लोबाट फोक्सोको सुरक्षा", "भित्ता र क्याबिनेटमा चिल्लो जम्न नदिने", "बिना झन्झट अटो-क्लिन प्रविधि"]
+    }
+  },
+  {
+    id: 2,
+    cat: "kitchen",
+    iconName: "CookingPot",
+    en: {
+      name: "Toughened Glass Gas Cooktop",
+      specs: ["Brass burners, 2–4 hobs", "Anti-skid heat resistant body", "Auto-ignition available"],
+      advantages: ["Heavy-duty toughened glass, scratch resistant", "High thermal efficiency brass burners", "Safe heat-resistant structure"]
+    },
+    np: {
+      name: "टफन्ड ग्लास ग्यास चुलो",
+      specs: ["ब्रास बर्नर, २–४ चुलो", "एन्टि-स्किड तातो प्रतिरोधी बडी", "अटो-इग्निसन उपलब्ध"],
+      advantages: ["मजबुत र स्क्र्याच-प्रतिरोधी ग्लास", "उच्च ताप क्षमता भएको ब्रास बर्नर", "सुरक्षित र तातो-प्रतिरोधी डिजाइन"]
+    }
+  },
+  {
+    id: 3,
+    cat: "kitchen",
+    iconName: "Microwave",
+    en: {
+      name: "Convection Microwave Oven",
+      specs: ["Bake, grill & reheat modes", "25–30 L family capacity", "Easy-clean cavity"],
+      advantages: ["Instant baking, grilling & reheating", "Saves cooking time compared to regular stove", "Healthy oil-free cooking support"]
+    },
+    np: {
+      name: "कन्भेक्सन माइक्रोवेभ ओभन",
+      specs: ["बेक, ग्रिल र रिहिट मोड", "२५–३० लिटर परिवार क्षमता", "सजिलो सफाइ"],
+      advantages: ["तुरुन्तै बेक, ग्रिल र रिहिट सुविधा", "नियमित चुलोको तुलनामा समय र ऊर्जा बचत", "स्वस्वस्थ र तेल-रहित खाना पकाउन सहयोगी"]
+    }
+  },
+  {
+    id: 4,
+    cat: "kitchen",
+    iconName: "Droplets",
+    en: {
+      name: "RO + UV Water Purifier",
+      specs: ["Multi-stage RO + UV purity", "Mineral retention technology", "Wall-mount installation"],
+      advantages: ["100% pure & safe drinking water", "Eliminates heavy metals and bacteria", "Retains essential natural minerals"]
+    },
+    np: {
+      name: "RO + UV वाटर प्युरिफायर",
+      specs: ["मल्टि-स्टेज RO + UV शुद्धता", "मिनरल रिटेन्सन प्रविधि", "भित्ता-माउन्ट जडान"],
+      advantages: ["१००% शुद्ध र सुरक्षित पिउने पानी", "हानिकारक ब्याक्टेरिया र धातुहरू हटाउने", "आवश्यक प्राकृतिक खनिजहरू कायम राख्ने"]
+    }
+  },
+  {
+    id: 6,
+    cat: "heating",
+    iconName: "Zap",
+    en: {
+      name: "Instant Electric Geyser",
+      specs: ["Rapid heating element", "Rust-proof inner tank", "V-Guard authorized"],
+      advantages: ["Instant hot water in seconds", "Highly energy-efficient heating coils", "Compact rust-proof layout"]
+    },
+    np: {
+      name: "इन्स्ट्यान्ट इलेक्ट्रिक गिजर",
+      specs: ["छिटो तातो हुने एलिमेन्ट", "खिया नलाग्ने भित्री ट्याङ्क", "भि-गार्ड अधिकृत"],
+      advantages: ["सेकेन्डमै तुरुन्तै तातो पानी", "कम बिजुली खपत गर्ने हिटिङ एलिमेन्ट", "खिया नलाग्ने सुरक्षित डिजाइन"]
+    }
+  },
+  {
+    id: 7,
+    cat: "heating",
+    iconName: "Snowflake",
+    en: {
+      name: "Room Heater & Fan Heater",
+      specs: ["Tip-over safety cut-off", "Adjustable thermostat", "Energy-efficient coils"],
+      advantages: ["Rapid warmth distribution in winter rooms", "Built-in tip-over safety cut-off switch", "Lightweight and fully portable"]
+    },
+    np: {
+      name: "रुम हिटर र फ्यान हिटर",
+      specs: ["ढल्किँदा अटो बन्द हुने", "मिलाउन मिल्ने थर्मोस्ट्याट", "ऊर्जा-कुशल कोइल"],
+      advantages: ["कोठामा तुरुन्तै समान रूपमा तातो फैलाउने", "ढल्किँदा आफैं बन्द हुने सुरक्षा स्विच", "हल्का र सजिलै सार्न मिल्ने"]
+    }
+  },
+  {
+    id: 8,
+    cat: "heating",
+    iconName: "BatteryCharging",
+    en: {
+      name: "Solar Panel + Backup System",
+      specs: ["On-grid & off-grid setups", "Inverter + battery backup", "Free site assessment"],
+      advantages: ["Uninterrupted power during load-shedding", "Reduces high grid electricity bills", "Eco-friendly clean energy source"]
+    },
+    np: {
+      name: "सोलार प्यानल + ब्याकअप प्रणाली",
+      specs: ["अन-ग्रिड र अफ-ग्रिड सेटअप", "इन्भर्टर + ब्याट्री ब्याकअप", "निःशुल्क साइट निरीक्षण"],
+      advantages: ["लोडसेडिङको समयमा पनि निरन्तर बिजुली", "उच्च बिजुली महसुल घटाउने", "पर्यावरण-मैत्री स्वच्छ ऊर्जा"]
+    }
+  },
+  {
+    id: 9,
+    cat: "electronics",
+    iconName: "Tv",
+    en: {
+      name: "Smart 4K LED Television",
+      specs: ["32\"–65\" screen sizes", "Built-in apps & WiFi", "1-year warranty support"],
+      advantages: ["Stunning theater-like cinema visuals at home", "Built-in smart apps & WiFi connectivity", "Reduces family outdoor entertainment costs"]
+    },
+    "np": {
+      "name": "स्मार्ट ४K LED टेलिभिजन",
+      "specs": ["३२\"–६५\" स्क्रिन आकार", "बिल्ट-इन एप्स र वाईफाई", "१ वर्ष वारेन्टी सहयोग"],
+      "advantages": ["घरमै हल जस्तै सिनेमाको अनुभूति", "बिल्ट-इन स्मार्ट एप्स र वाईफाई जडान", "पारिवारिक मनोरञ्जनको खर्च बचत"]
+    }
+  },
+  {
+    id: 11,
+    cat: "electronics",
+    iconName: "Wind",
+    en: {
+      name: "DishHome & FiberNet Setup",
+      specs: ["TV + internet connection", "Same-day installation", "Authorized partner"],
+      advantages: ["All-in-one high-speed internet & TV connection", "Same-day installation & local support", "Perfect for students & remote work"]
+    },
+    np: {
+      name: "डिशहोम र फाइबरनेट जडान",
+      specs: ["टिभी + इन्टरनेट जडान", "सोही दिन जडान", "अधिकृत साझेदार"],
+      "advantages": ["इन्टरनेट र टिभी जडान एकै ठाउँमा", "सोही दिन जडान र स्थानीय प्राविधिक सहयोग", "विद्यार्थी र घरबाट काम गर्नेलाई उपयुक्त"]
+    }
+  },
+  {
+    id: 12,
+    cat: "electronics",
+    iconName: "Zap",
+    en: {
+      name: "Voltage Stabilizer",
+      specs: ["Protects TV, fridge & AC", "Wide voltage range", "V-Guard authorized"],
+      advantages: ["Protects TV, Fridge & AC motherboard from damage", "Prevents appliance burnouts during voltage spikes", "Extends lifespan of electronics"]
+    },
+    np: {
+      name: "भोल्टेज स्टेबिलाइजर",
+      specs: ["टिभी, फ्रिज र AC सुरक्षा", "फराकिलो भोल्टेज दायरा", "भि-गार्ड अधिकृत"],
+      advantages: ["टिभी, फ्रिज र AC को मदरबोर्ड सुरक्षा", "भोल्टेज तलमाथि हुँदा सामान बिग्रिन नदिने", "इलेक्ट्रोनिक्स सामानको आयु बढाउने"]
     }
   }
-}
+]
 
 export default function Products({ isNepali, phoneNumber }: ProductsProps) {
   const [query, setQuery] = useState("")
   const [tab, setTab] = useState<"all" | Category>("all")
+  const [products, setProducts] = useState<Product[]>(defaultProducts)
 
-  const products: Product[] = [
-    {
-      id: 5,
-      cat: "heating",
-      icon: Sun,
-      en: {
-        name: "Solar Water Heating System",
-        specs: ["100–300 L tank options", "Year-round hot water", "Low running cost"],
-        advantages: ["Once paid, unlimited free hot water", "Zero electricity bills", "Works efficiently even in cold winter days"]
-      },
-      np: {
-        name: "सोलार वाटर हिटिङ प्रणाली",
-        specs: ["१००–३०० लिटर ट्याङ्क विकल्प", "वर्षभरि तातो पानी", "कम सञ्चालन खर्च"],
-        advantages: ["एक पटकको लगानी, सधैंको लागि निःशुल्क तातो पानी", "शून्य बिजुली महसुल", "चिसो हिउँदमा पनि प्रभावकारी काम"]
-      }
-    },
-    {
-      id: 1,
-      cat: "kitchen",
-      icon: Wind,
-      en: {
-        name: "Auto-Clean Kitchen Chimney",
-        specs: ["Powerful 1200 m³/hr suction", "Touch & auto-clean control", "Hindware / Brio authorized"],
-        advantages: ["Protects lungs from harmful oil fumes & smoke", "Prevents sticky yellow walls & cabinets", "Zero maintenance auto-clean heating coils"]
-      },
-      np: {
-        name: "अटो-क्लिन किचन चिम्नी",
-        specs: ["१२०० m³/घण्टा शक्तिशाली सक्सन", "टच र अटो-क्लिन सुविधा", "हिन्दवेयर / ब्रियो अधिकृत"],
-        advantages: ["धुवाँ र हानिकारक चिल्लोबाट फोक्सोको सुरक्षा", "भित्ता र क्याबिनेटमा चिल्लो जम्न नदिने", "बिना झन्झट अटो-क्लिन प्रविधि"]
-      }
-    },
-    {
-      id: 2,
-      cat: "kitchen",
-      icon: CookingPot,
-      en: {
-        name: "Toughened Glass Gas Cooktop",
-        specs: ["Brass burners, 2–4 hobs", "Anti-skid heat resistant body", "Auto-ignition available"],
-        advantages: ["Heavy-duty toughened glass, scratch resistant", "High thermal efficiency brass burners", "Safe heat-resistant structure"]
-      },
-      np: {
-        name: "टफन्ड ग्लास ग्यास चुलो",
-        specs: ["ब्रास बर्नर, २–४ चुलो", "एन्टि-स्किड तातो प्रतिरोधी बडी", "अटो-इग्निसन उपलब्ध"],
-        advantages: ["मजबुत र स्क्र्याच-प्रतिरोधी ग्लास", "उच्च ताप क्षमता भएको ब्रास बर्नर", "सुरक्षित र तातो-प्रतिरोधी डिजाइन"]
-      }
-    },
-    {
-      id: 3,
-      cat: "kitchen",
-      icon: Microwave,
-      en: {
-        name: "Convection Microwave Oven",
-        specs: ["Bake, grill & reheat modes", "25–30 L family capacity", "Easy-clean cavity"],
-        advantages: ["Instant baking, grilling & reheating", "Saves cooking time compared to regular stove", "Healthy oil-free cooking support"]
-      },
-      np: {
-        name: "कन्भेक्सन माइक्रोवेभ ओभन",
-        specs: ["बेक, ग्रिल र रिहिट मोड", "२५–३० लिटर परिवार क्षमता", "सजिलो सफाइ"],
-        advantages: ["तुरुन्तै बेक, ग्रिल र रिहिट सुविधा", "नियमित चुलोको तुलनामा समय र ऊर्जा बचत", "स्वस्वस्थ र तेल-रहित खाना पकाउन सहयोगी"]
-      }
-    },
-    {
-      id: 4,
-      cat: "kitchen",
-      icon: Droplets,
-      en: {
-        name: "RO + UV Water Purifier",
-        specs: ["Multi-stage RO + UV purity", "Mineral retention technology", "Wall-mount installation"],
-        advantages: ["100% pure & safe drinking water", "Eliminates heavy metals and bacteria", "Retains essential natural minerals"]
-      },
-      np: {
-        name: "RO + UV वाटर प्युरिफायर",
-        specs: ["मल्टि-स्टेज RO + UV शुद्धता", "मिनरल रिटेन्सन प्रविधि", "भित्ता-माउन्ट जडान"],
-        advantages: ["१००% शुद्ध र सुरक्षित पिउने पानी", "हानिकारक ब्याक्टेरिया र धातुहरू हटाउने", "आवश्यक प्राकृतिक खनिजहरू कायम राख्ने"]
-      }
-    },
-    {
-      id: 6,
-      cat: "heating",
-      icon: Zap,
-      en: {
-        name: "Instant Electric Geyser",
-        specs: ["Rapid heating element", "Rust-proof inner tank", "V-Guard authorized"],
-        advantages: ["Instant hot water in seconds", "Highly energy-efficient heating coils", "Compact rust-proof layout"]
-      },
-      np: {
-        name: "इन्स्ट्यान्ट इलेक्ट्रिक गिजर",
-        specs: ["छिटो तातो हुने एलिमेन्ट", "खिया नलाग्ने भित्री ट्याङ्क", "भि-गार्ड अधिकृत"],
-        advantages: ["सेकेन्डमै तुरुन्तै तातो पानी", "कम बिजुली खपत गर्ने हिटिङ एलिमेन्ट", "खिया नलाग्ने सुरक्षित डिजाइन"]
-      }
-    },
-    {
-      id: 7,
-      cat: "heating",
-      icon: Snowflake,
-      en: {
-        name: "Room Heater & Fan Heater",
+  useEffect(() => {
+    fetch("/api/products")
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setProducts(data)
+        }
+      })
+      .catch((err) => console.error("Error loading products catalog:", err))
+  }, [])ame: "Room Heater & Fan Heater",
         specs: ["Tip-over safety cut-off", "Adjustable thermostat", "Energy-efficient coils"],
         advantages: ["Rapid warmth distribution in winter rooms", "Built-in tip-over safety cut-off switch", "Lightweight and fully portable"]
       },
@@ -355,7 +432,7 @@ export default function Products({ isNepali, phoneNumber }: ProductsProps) {
       {filteredProducts.length > 0 ? (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {filteredProducts.map((p, idx) => {
-            const Icon = p.icon
+            const Icon = getIconComponent(p.iconName || "")
             const data = isNepali ? p.np : p.en
             return (
               <Card
@@ -364,9 +441,18 @@ export default function Products({ isNepali, phoneNumber }: ProductsProps) {
                 className="group card-shine overflow-hidden border-border p-0 transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/20 hover:shadow-lg rounded-2xl animate-slide-up-fade"
               >
                 <div className="relative flex h-44 items-center justify-center bg-gradient-to-br from-muted to-accent/20">
-                  <span className="flex h-20 w-20 items-center justify-center rounded-2xl bg-card text-primary shadow-sm transition-all duration-500 group-hover:scale-110 group-hover:rotate-6">
-                    <Icon className="h-10 w-10" />
-                  </span>
+                  {p.imageUrl ? (
+                    <img
+                      src={p.imageUrl}
+                      alt={data.name}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <span className="flex h-20 w-20 items-center justify-center rounded-2xl bg-card text-primary shadow-sm transition-all duration-500 group-hover:scale-110 group-hover:rotate-6">
+                      <Icon className="h-10 w-10" />
+                    </span>
+                  )}
                   <Badge className="absolute left-3 top-3 bg-card text-card-foreground shadow-sm hover:bg-card">
                     {isNepali ? catLabels[p.cat].np : catLabels[p.cat].en}
                   </Badge>

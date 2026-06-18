@@ -217,8 +217,8 @@ export default function Services({
         <span className="inline-block rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-primary">
           {isNepali ? "हाम्रा सेवाहरू" : "Our Services"}
         </span>
-        <h2 className="mt-4 font-heading text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
-          {isNepali ? "जडान, सफाइ र मर्मत" : "Installation, Cleaning & Repair"}
+        <h2 className="mt-4 font-heading text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl lg:text-4xl">
+          {isNepali ? "आधिकारिक पार्टपुर्जाहरूको साथमा आफ्ना उपकरणहरू आजै मर्मत गर्नुहोस्" : "Fix Your Appliances Today with Authorized Parts"}
         </h2>
         <p className="mt-3 text-pretty text-sm leading-relaxed text-muted-foreground">
           {isNepali

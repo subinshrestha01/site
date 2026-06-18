@@ -46,9 +46,11 @@ export default function MobileBar({
         {/* Call Button */}
         <a
           href={`tel:${phoneNumber}`}
-          className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-transform hover:scale-105 active:scale-95"
+          className="relative flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-transform hover:scale-105 active:scale-95"
           aria-label="Call Now"
         >
+          {/* Pulsing High-Contrast Outer Ring */}
+          <span className="absolute inset-0 rounded-full bg-primary/50 animate-ping -z-10 opacity-75" />
           <PhoneCall className="h-5.5 w-5.5" />
         </a>
       </div>
